@@ -69,6 +69,7 @@ class Field extends LinearLayout {
     public void startGame() {
         resetScore();
         resetCircles();
+
         for (SquareButton squareButton : circles) {
             squareButton.setOnClickListener(new OnClickListener() {
                 @Override
@@ -80,13 +81,16 @@ class Field extends LinearLayout {
                     } else {
                         mole.stopHopping();
                         listener.onGameEnded(score);
+                        circles[currentCircle].setBackground(ContextCompat.getDrawable(getContext(), R.drawable.orange_oval));
+                        resetCircles();
+
                     }
                 }
             });
         }
 
-        mole = new Mole(this);
-        mole.startHopping();
+            mole = new Mole(this);
+            mole.startHopping();
     }
 
     public int getCurrentCircle() {

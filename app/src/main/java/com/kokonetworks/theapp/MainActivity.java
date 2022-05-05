@@ -12,6 +12,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvLevel;
     private TextView tvScore;
     private Button btnStart;
+    private boolean isUserClicked = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
             btnStart.setVisibility(View.GONE);
             tvScore.setVisibility(View.GONE);
             field.startGame();
+            Mole.isUserClicked = false;
         });
         field.setListener(listener);
     }

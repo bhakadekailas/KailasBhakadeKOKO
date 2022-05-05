@@ -1,5 +1,7 @@
 package com.kokonetworks.theapp;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -9,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 class Mole {
     private final Field field;
     private int currentLevel = 0;
+    public static boolean isUserClicked = true;
     private long startTimeForLevel;
     private final int[] LEVELS = new int[]{1000, 900, 800, 700, 600, 500, 400, 300, 200, 100};
     private final long LEVEL_DURATION_MS = 10000;
@@ -28,19 +31,25 @@ class Mole {
             field.setActive(nextHole());
 
             if (System.currentTimeMillis() - startTimeForLevel >= LEVEL_DURATION_MS && getCurrentLevel() < LEVELS.length) {
-                nextLevel();
+                isUserClicked = false;
+                    nextLevel();
             }
         }, LEVELS[currentLevel], LEVELS[currentLevel], TimeUnit.MILLISECONDS);
     }
 
     public void stopHopping() {
         future.cancel(false);
+        field.setActive(field.getCurrentCircle());
     }
 
     private void nextLevel() {
-        currentLevel++;
-        future.cancel(false);
-        startHopping();
+        if (isUserClicked){
+            currentLevel++;
+            future.cancel(false);
+            startHopping();
+        }else {
+            stopHopping();
+        }
     }
 
     public int getCurrentLevel() {
@@ -48,7 +57,7 @@ class Mole {
     }
 
     private int nextHole() {
-        int hole = new Random().nextInt(field.totalCircles() - 1);
+        int hole = new Random().nextInt(field.totalCircles());
         if (hole == field.getCurrentCircle()) {
             return nextHole();
         }
